@@ -1,0 +1,19 @@
+name: Content checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check Markdown sources
+        run: |
+          test -n "$(find . -maxdepth 2 -type f -name '*.md' -print -quit)"
+          ! rg -n '^(<<<<<<<|=======|>>>>>>>)' --glob '*.md' .
+          git diff --check
